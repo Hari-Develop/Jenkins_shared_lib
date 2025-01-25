@@ -62,7 +62,7 @@ def call (Map configMap){
                         groupId: 'com.roboshop',
                         version: "${pacakageVersion}",
                         repository: "catalogue",
-                        credentialsId: 'nexus_auth',
+                        credentialsId: 'nexus-auth',
                         artifacts: [
                             [artifactId: 'catalogue',
                             classifier: '',
