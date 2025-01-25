@@ -3,13 +3,13 @@ def decidepipeline(Map configMap){
     switch("application") {
         case 'nodejsVM':
             nodejsVM(configMap)
-        break
+            break
         case 'JavajsVM':
             javajsVM(configMap)
-        break
+            break
         case 'nodeEKS':
             nodeEKS(configMap)
-        break
+            break
         default:
             error "application is not  recognised"
             break
