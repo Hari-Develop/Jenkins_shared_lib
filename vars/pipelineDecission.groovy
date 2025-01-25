@@ -1,3 +1,4 @@
+#!groovy
 def decidepipeline(Map configMap){
     application = application.configMap.get("application")
     switch("application") {
