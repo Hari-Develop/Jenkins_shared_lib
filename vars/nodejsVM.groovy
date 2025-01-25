@@ -7,7 +7,7 @@ def call (Map configMap){
         }
         environment{
             pacakageVersion = ''
-            nexusUrl = '172.31.95.119:8081'
+            nexusUrl = '52.90.35.227:8081'
         }
         options{
             disableConcurrentBuilds()
