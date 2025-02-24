@@ -1,88 +1,77 @@
 def call (Map configMap){
-    pipeline{
-        agent{
-            node{
-                label "Jenkins_agent"
-            }
+pipeline {
+    agent {
+        node {
+            label "Jenkins_agent"
         }
-        environment{
-            pacakageVersion = ''
-            nexusUrl = '172.31.95.119:8081'
-        }
-        options{
-            disableConcurrentBuilds()
-            ansiColor('xterm')
-        }
-        stages{
-            stage('getting Version of the application'){
-                steps{
-                    script {
-
-                        def packageJson = readJSON file: 'package.json'
-                        pacakageVersion = packageJson.version
-                        echo "the version of the application: $pacakageVersion"
-                    }
-                }
-            }
-            stage('installing dependences'){
-                steps{
-                    sh """
-                        npm install
-                    """
-                }
-            }
-            stage('unit testing'){
-                steps{
-                    sh """
-                        echo "unit test will run here"
-                    """
-                }
-            }
-            stage('sonar-scan'){
-                steps{
-                    sh """
-                        sonar-scanner
-                    """
-                }
-            }
-            stage('Build'){
-                steps{
-                    sh """
-                        zip -q -r catalogue-${pacakageVersion}.zip ./* -x ".git" -x ".sonar-project.properties"
-                        ls -la
-                    """
-                }
-            }
-            stage('nexus artificat uploader'){
-                steps{
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: "${nexusUrl}",
-                        groupId: 'com.roboshop',
-                        version: "${pacakageVersion}",
-                        repository: "catalogue",
-                        credentialsId: 'nexus-auth',
-                        artifacts: [
-                            [artifactId: 'catalogue',
-                            classifier: '',
-                            file: 'catalogue-1.0.0.zip',
-                            type: 'zip']
-                        ]
-                    )
+    }
+    environment {
+        packageVersion = ''
+    }
+    options {
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    stages {
+        stage('Get Application Version') {
+            steps {
+                script {
+                    def packageJson = readJSON file: 'package.json'
+                    packageVersion = packageJson.version
+                    echo "Application version: ${packageVersion}"
                 }
             }
         }
-        post{
-            always{
-                echo "Pipeline is running"
+        stage('Build Application') {
+            steps {
+                sh 'npm install'
+                sh 'npm run build'
             }
-            failure{
-                echo "pipeline is failed"
+        }
+        stage('Run Unit Tests') {
+            steps {
+                sh 'npm test'
             }
-            success{
-                echo "pipeline is successfull"
+        }
+        stage('Code Quality Analysis') {
+            steps {
+                sh 'sonar-scanner'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t harinadhareddy/nodejs-app:${packageVersion} .'
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-auth', url: '']) {
+                    sh 'docker push harinadhareddy/nodejs-app:${packageVersion}'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl set image deployment/nodejs-app nodejs-app=harinadhareddy/nodejs-app:${packageVersion} --record'
+            }
+        }
+        stage('Smoke Test') {
+            steps {
+                sh 'curl -f http://myapp.mydomain.com/health || exit 1'
             }
         }
     }
+    post {
+        always {
+            echo "Pipeline execution completed"
+        }
+        failure {
+            echo "Pipeline execution failed"
+        }
+        success {
+            echo "Pipeline executed successfully"
+        }
+    }
+}
+
 }
