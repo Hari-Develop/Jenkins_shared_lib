@@ -59,7 +59,7 @@ def call (Map configMap){
                     sh '''
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-config.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-secret.yaml
-                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-ConfigMap.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/PostgreSQL-ConfigMap.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-Secret.yaml
                     '''
                 }
