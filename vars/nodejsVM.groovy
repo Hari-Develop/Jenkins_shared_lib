@@ -32,7 +32,9 @@ def call (Map configMap){
             }
             stage('Run Unit Tests') {
                 steps {
-                    sh 'npm test'
+                    dir('nodejs-app') {
+                        sh 'npm test'
+                    }
                 }
             }
             stage('Code Quality Analysis') {
