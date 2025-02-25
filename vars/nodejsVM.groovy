@@ -73,6 +73,7 @@ def call (Map configMap){
         post {
             always {
                 echo "Pipeline execution completed"
+                deleteDir()
             }
             failure {
                 echo "Pipeline execution failed"
