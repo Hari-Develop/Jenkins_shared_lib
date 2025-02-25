@@ -59,8 +59,6 @@ def call (Map configMap){
                     sh '''
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-config.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-secret.yaml
-                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/PostgreSQL-ConfigMap.yaml
-                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-Secret.yaml
                     '''
                 }
             }
@@ -68,6 +66,8 @@ def call (Map configMap){
             stage('Deploy Node.js Application') {
                 steps {
                     sh '''
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/PostgreSQL-ConfigMap.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-Secret.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/deployment.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/ingress.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/nodjs-Service.yaml
