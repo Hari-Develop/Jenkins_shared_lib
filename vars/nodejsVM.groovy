@@ -57,22 +57,26 @@ def call (Map configMap){
             stage('Deploy Pre-requisites') {
                 steps {
                     sh '''
-                        kubectl apply -f config/configMap.yaml
-                        kubectl apply -f config/secret.yaml
-                        kubectl apply -f postgres/statefulset.yaml
-                        kubectl apply -f postgres/service.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-config.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/nodejs-secret.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-ConfigMap.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/config/postgreSQL-Secret.yaml
                     '''
                 }
-        }
-        stage('Deploy Node.js Application') {
+            }
+
+            stage('Deploy Node.js Application') {
                 steps {
                     sh '''
-                        kubectl apply -f deployment/deployment.yaml
-                        kubectl apply -f deployment/service.yaml
-                        kubectl apply -f deployment/ingress.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/deployment.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/ingress.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/nodjs-Service.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/PostgreSQL-Service.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/PostgreSQL-StatefulSet.yaml
                     '''
                 }
-        }
+            }
+
         }
         post {
             always {
