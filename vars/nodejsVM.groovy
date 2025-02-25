@@ -44,13 +44,13 @@ def call (Map configMap){
             }
             stage('Build Docker Image') {
                 steps {
-                    sh 'docker build -t harinadhareddy/nodejs-app:${packageVersion} .'
+                    sh 'cd nodejs-app && docker build -t harinadhareddy/nodejs-app:latest .'
                 }
             }
             stage('Push Docker Image') {
                 steps {
                     withDockerRegistry([credentialsId: 'docker-hub-auth', url: '']) {
-                        sh 'docker push harinadhareddy/nodejs-app:${packageVersion}'
+                        sh 'docker push harinadhareddy/nodejs-app:latest'
                     }
                 }
             }
