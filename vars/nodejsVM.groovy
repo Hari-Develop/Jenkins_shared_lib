@@ -25,6 +25,7 @@ def call (Map configMap){
             stage('Build Application') {
                 steps {
                     sh 'npm install'
+                }
             }
             stage('Run Unit Tests') {
                 steps {
