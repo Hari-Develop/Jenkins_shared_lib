@@ -24,10 +24,11 @@ def call (Map configMap){
             }
             stage('Build Application') {
                 steps {
-                    dir('nodejs-app') { 
+                    dir('nodejs-app') {
                         sh 'npm install'
                         sh 'npm run build'
                     }
+                }
             }
             stage('Run Unit Tests') {
                 steps {
