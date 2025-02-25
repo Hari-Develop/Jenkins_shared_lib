@@ -15,12 +15,8 @@ def call (Map configMap){
         stages {
             stage('Get Application Version') {
                 steps {
-                    sh """
-                        ls 
-                        cd nodejs-app
-                    """
                     script {
-                        def packageJson = readJSON file: 'package.json'
+                        def packageJson = readJSON file: 'nodejs-app/package.json'
                         packageVersion = packageJson.version
                         echo "Application version: ${packageVersion}"
                     }
