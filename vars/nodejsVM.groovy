@@ -70,7 +70,7 @@ def call (Map configMap){
                         kubectl apply -f ${WORKSPACE}/nodejs-app/config/PostgreSQLconf.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/deployment.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/ingress.yaml
-                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/nodejsservice.yaml
+                        kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/nodejs_svc.yaml.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/PostgreSQL-Service.yaml
                         kubectl apply -f ${WORKSPACE}/nodejs-app/deployment/PostgreSQL-StatefulSet.yaml
                     '''
